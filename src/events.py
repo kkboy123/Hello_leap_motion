@@ -9,8 +9,13 @@ from x64.Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGestur
 
 class SampleListener(Leap.Listener):
 
+    # The Controller object is initialized
     def on_init(self, controller):
         print "Device initialized"
+
+    # The Controller has connected to the Leap Motion service/daemon
+    def on_service_connect(self, controller):
+        print "service connected"
 
     # The status of a Leap Motion hardware device changes
     def on_device_change(self, controller):
@@ -36,17 +41,13 @@ class SampleListener(Leap.Listener):
     # A new Frame of tracking data is available
     def on_frame(self, controller):
         # controller is a Leap.Controller object
-        # if controller.is_connected:
-        # The latest frame
-        frame = controller.frame()
-        # The previous frame
-        previous = controller.frame(1)
-        print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
-            frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
-
-    # The Controller has connected to the Leap Motion service/daemon
-    def on_service_connect(self, controller):
-        print "service connected"
+        if controller.is_connected:
+            # The latest frame
+            frame = controller.frame()
+            # The previous frame
+            # previous = controller.frame(1)
+            print "Frame id: %d, timestamp: %d, hands: %d, fingers: %d, tools: %d, gestures: %d" % (
+                frame.id, frame.timestamp, len(frame.hands), len(frame.fingers), len(frame.tools), len(frame.gestures()))
 
     # The Controller has lost its connection to the Leap Motion service/daemon
     def on_service_disconnect(self, controller):
@@ -67,7 +68,6 @@ def main():
     controller = Leap.Controller()
     # Have the sample listener receive events from the controller
     controller.add_listener(listener)
-
     # Keep this process running until Enter is pressed
     print "Press Enter to quit..."
     try:
